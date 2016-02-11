@@ -46,11 +46,13 @@ module.exports = function(grunt) {
 
     jshint: {
       files: [
+        'app/**/*.js', 'lib/**/*.js', 'public/**/*.js', 'server.js'
         // Add filespec list here
       ],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
+        //ignoring libraries, and our uglified mess
         ignores: [
           'public/lib/**/*.js',
           'public/dist/**/*.js'
@@ -59,6 +61,11 @@ module.exports = function(grunt) {
     },
     //compresses css files
     cssmin: {
+      target: {
+        files: {
+          'public/output.css': ['public/*.css']
+        }
+      }
     },
 
     watch: {
@@ -80,6 +87,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push heroku master'
       }
     },
   });
@@ -111,20 +119,18 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
   // Main grunt tasks
   ////////////////////////////////////////////////////
-/*
-
-grunt.registerMultiTask('log', 'Log stuff.', function() {
-  grunt.log.writeln(this.target + ': ' + this.data);
-});
 
 
-
-*/
   grunt.registerTask('test', [
+    'jshint',
     'mochaTest'
   ]);
 
   grunt.registerTask('build', [
+    'concat',
+    'uglify',
+    'cssmin',
+    'test'
   ]);
 
   //grunt upload --prod --> would return true and production server tasks
@@ -132,6 +138,7 @@ grunt.registerMultiTask('log', 'Log stuff.', function() {
     if(grunt.option('prod')) {
       // add your production server task here
       //when you're ready to push up to the production server
+      'shell'
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -141,6 +148,7 @@ grunt.registerMultiTask('log', 'Log stuff.', function() {
   grunt.registerTask('deploy', [
     // add your deploy tasks here
     //to build and host your app on a local dev server
+    'build'
   ]);
 
 
