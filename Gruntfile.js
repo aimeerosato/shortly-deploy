@@ -129,8 +129,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'concat',
     'uglify',
-    'cssmin',
-    'test'
+    'cssmin'
   ]);
 
   //grunt upload --prod --> would return true and production server tasks
@@ -145,11 +144,13 @@ module.exports = function(grunt) {
   });
 
   //grunt deploy
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', function(n) {
+    grunt.task.run(['test']);
+    grunt.task.run(['build']);
+  
     // add your deploy tasks here
     //to build and host your app on a local dev server
-    'build'
-  ]);
+  });
 
   grunt.registerTask('heroku', [
     'build'
