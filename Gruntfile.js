@@ -147,14 +147,15 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', function(n) {
     grunt.task.run(['test']);
     grunt.task.run(['build']);
-  
+   // grunt.task.run(['upload']);  
     // add your deploy tasks here
     //to build and host your app on a local dev server
   });
 
-  grunt.registerTask('heroku', [
-    'build'
-  ]);
+  //needed for buildpack
+  grunt.registerTask('heroku', function(n){
+    grunt.task.run(['deploy']);
+  });
 
 
 
