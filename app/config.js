@@ -12,13 +12,12 @@ var mongoose = require('mongoose');
 //connection is process.env uri  OR local url string
 
 var localUri = 'mongodb://127.0.0.1/test';
-var connection = process.env.MONGOLAB_URI || localUri;
+var uri = process.env.MONGOLAB_URI || localUri;
 
-var db = mongoose.connect(connection);
+mongoose.connect(uri);
+var db = mongoose.connection;
 
-db.on('error', function(){
-  console.log("Connection Error.");
-});
+db.on('error', console.error.bind(console, "Connection Error."));
 db.once('open', function(){
   console.log('connected!');
 });
@@ -67,4 +66,4 @@ db.once('open', function(){
 //   }
 // });
 
-// module.exports = db;
+module.exports = db;
